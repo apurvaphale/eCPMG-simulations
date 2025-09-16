@@ -1,0 +1,827 @@
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[         0,          0]
+NotebookDataLength[     34622,        826]
+NotebookOptionsPosition[     33924,        803]
+NotebookOutlinePosition[     34317,        819]
+CellTagsIndexPosition[     34274,        816]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ClearAll", "[", "\"\<Global`*\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "Model", " ", "1", " ", "is", " ", "fitting", " ", "using", " ", "the", 
+    " ", "Luz", " ", "meiboom", " ", "model"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"modelI", "[", 
+    RowBox[{
+     RowBox[{"\[Nu]_", "?", "NumberQ"}], ",", 
+     RowBox[{"kex_", "?", "NumberQ"}], ",", 
+     RowBox[{"prefactor_", "?", "NumberQ"}], ",", 
+     RowBox[{"R20_", "?", "NumberQ"}], ",", 
+     RowBox[{"field_", "?", "NumberQ"}]}], "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"Block", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"domega", ",", "phi"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"\[Phi]", "=", 
+       RowBox[{"prefactor", " ", "*", 
+        RowBox[{"field", "^", "2"}]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"R20", " ", "+", 
+       RowBox[{
+        FractionBox["\[Phi]", "kex"], "*", " ", 
+        RowBox[{"(", 
+         RowBox[{"1", "-", 
+          RowBox[{
+           FractionBox[
+            RowBox[{"4", " ", "\[Nu]"}], "kex"], " ", 
+           RowBox[{"Tanh", "[", 
+            FractionBox["kex", 
+             RowBox[{"4", " ", "\[Nu]"}]], "]"}]}]}], ")"}]}]}]}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"modelI", "[", 
+     RowBox[{"10", ",", "10000", ",", "10", ",", "20", ",", "60"}], "]"}], "//",
+     "N"}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "Model", " ", "2", " ", "is", " ", "fitting", " ", "using", " ", "the", 
+     " ", "Bloch"}], "-", 
+    RowBox[{"mcConnell", " ", "model"}]}], "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"modelII", "[", 
+   RowBox[{
+    RowBox[{"\[Nu]_", "?", "NumberQ"}], ",", 
+    RowBox[{"kAB_", "?", "NumberQ"}], ",", 
+    RowBox[{"kBA_", "?", "NumberQ"}], ",", 
+    RowBox[{"R20_", "?", "NumberQ"}], ",", 
+    RowBox[{"csd_", "?", "NumberQ"}], ",", 
+    RowBox[{"field_", "?", "NumberQ"}]}], "]"}], ":=", "\[IndentingNewLine]", 
+  
+  RowBox[{"Block", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "delta", ",", "ncp", ",", "tcp", ",", "domega", ",", "Alist", ",", "eA", 
+      ",", "Astar", ",", "eAstar", ",", "matB", ",", "matC", ",", "pB", ",", 
+      "M0", ",", "MT"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"delta", "=", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"4", " ", "\[Nu]"}], ")"}], "^", 
+       RowBox[{"-", "1"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"ncp", "=", 
+      RowBox[{"tcp", "*", "\[Nu]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"domega", "=", 
+      RowBox[{"csd", "*", "2", "*", "\[Pi]", "*", "field"}]}], ";", "\n", 
+     RowBox[{"tcp", "=", "0.06"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Alist", "=", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"-", "R20"}], "-", "kAB"}], ",", "kBA"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"kAB", ",", 
+          RowBox[{
+           RowBox[{"-", "R20"}], "-", "kBA", "+", 
+           RowBox[{"\[ImaginaryI]", " ", "domega"}]}]}], "}"}]}], "}"}]}], 
+     ";", "\[IndentingNewLine]", 
+     RowBox[{"eA", "=", 
+      RowBox[{"MatrixExp", "[", 
+       RowBox[{"N", "[", 
+        RowBox[{"Alist", "*", "delta"}], "]"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Astar", "=", 
+      RowBox[{"Conjugate", "[", "Alist", "]"}]}], ";", "\[IndentingNewLine]", 
+     
+     RowBox[{"eAstar", "=", 
+      RowBox[{"MatrixExp", "[", 
+       RowBox[{"N", "[", 
+        RowBox[{"Astar", "*", "delta"}], "]"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"matB", "=", 
+      RowBox[{"Dot", "[", 
+       RowBox[{
+        RowBox[{"Dot", "[", 
+         RowBox[{
+          RowBox[{"Dot", "[", 
+           RowBox[{"eA", ",", "eAstar"}], "]"}], ",", "eAstar"}], "]"}], ",", 
+        "eA"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"matC", "=", 
+      RowBox[{"MatrixPower", "[", 
+       RowBox[{
+        RowBox[{"N", "[", "matB", "]"}], ",", "ncp"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"pB", "=", 
+      RowBox[{"kAB", "/", 
+       RowBox[{"(", 
+        RowBox[{"kAB", "+", "kBA"}], ")"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"M0", "=", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"1", "-", "pB"}], "}"}], ",", 
+        RowBox[{"{", "pB", "}"}]}], "}"}]}], ";", "\n", 
+     RowBox[{"MT", "=", 
+      RowBox[{"Dot", "[", 
+       RowBox[{"matC", ",", "M0"}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Re", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"-", "1"}], "/", 
+         RowBox[{"(", 
+          RowBox[{"4", "*", "ncp", "*", "delta"}], ")"}]}], ")"}], "*", 
+       RowBox[{"Log", "[", 
+        RowBox[{
+         RowBox[{"MT", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ",", "1"}], "]"}], "]"}], "/", 
+         RowBox[{"M0", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", ",", "1"}], "]"}], "]"}]}], "]"}]}], "]"}]}]}], " ", 
+   RowBox[{"(*", 
+    RowBox[{"For", " ", "slow", " ", "exchnage"}], "*)"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"field600", "=", "600."}], ";"}], " ", 
+  RowBox[{"(*", 
+   RowBox[{"change", " ", "for", " ", "N", " ", "fittings"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"field800", "=", "800."}], ";"}], " ", 
+  RowBox[{"(*", 
+   RowBox[{"change", " ", "for", " ", "N", " ", "fittings"}], "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"errUb800", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"errUb600", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.959313570368415*^9, 3.9593135797173634`*^9}, 
+   3.959313612384861*^9, 3.959315297985073*^9, {3.959315703884355*^9, 
+   3.959315718243492*^9}, {3.959324851723729*^9, 3.959324852052367*^9}, {
+   3.966472648679009*^9, 3.966472704004611*^9}, {3.966473032079776*^9, 
+   3.966473054379369*^9}, {3.966473488864841*^9, 3.966473535935527*^9}, 
+   3.966473571900922*^9, 
+   3.966473666292076*^9},ExpressionUUID->"bd61ac34-e2ac-4c3d-b2e5-\
+5eaaa443066b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Base", " ", "folder", " ", "containing", " ", "replica", " ", "folders"}],
+    "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+    "baseFolder", "=", 
+     "\"\</Users/apurvaphale/Desktop/Apurva/..../HCPMG/100reps/optimised/data/\
+\>\""}], ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Get", " ", "all", " ", "replica", " ", "subfolders"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"replicaFolders", "=", 
+     RowBox[{"Select", "[", 
+      RowBox[{
+       RowBox[{"FileNames", "[", 
+        RowBox[{"\"\<*\>\"", ",", "baseFolder"}], "]"}], ",", "DirectoryQ"}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Loop", " ", "through", " ", "each", " ", "replica", " ", "folder"}], 
+    "*)"}], "\n", 
+   RowBox[{"Do", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"ClearAll", "[", 
+       RowBox[{"preBM", ",", "preLM", ",", "dataComb"}], "]"}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"dataComb", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"preBM", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"preLM", "=", 
+       RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"currentFolder", "=", "replica"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"fileList", "=", 
+       RowBox[{"FileNames", "[", 
+        RowBox[{"\"\<*.csv\>\"", ",", "currentFolder"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"allData", "=", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"Import", "[", "file", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"file", ",", "fileList"}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"data", "=", 
+          RowBox[{"allData", "[", 
+           RowBox[{"[", "i", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"nucpmg", "=", 
+          RowBox[{"data", "[", 
+           RowBox[{"[", 
+            RowBox[{"All", ",", "1"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Ub800", "=", 
+          RowBox[{"data", "[", 
+           RowBox[{"[", 
+            RowBox[{"All", ",", "2"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Ub600", "=", 
+          RowBox[{"data", "[", 
+           RowBox[{"[", 
+            RowBox[{"All", ",", "3"}], "]"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+           RowBox[{"Print", "[", "Ub800", "]"}], ";"}], "*)"}], 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"AppendTo", "[", 
+          RowBox[{"dataComb", ",", " ", 
+           RowBox[{"{", " ", "Ub800", "}"}]}], "]"}], ";", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"fileList2", " ", "=", 
+          RowBox[{"fileList", "[", 
+           RowBox[{"[", "i", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"splitTitles", "=", 
+          RowBox[{"StringSplit", "[", 
+           RowBox[{"fileList2", ",", "\"\<+\>\""}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"csddata", "=", 
+          RowBox[{"splitTitles", "[", 
+           RowBox[{"[", "2", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"csddata", "=", 
+          RowBox[{"ToExpression", "[", "csddata", "]"}]}], ";", "\n", 
+         RowBox[{"kexdata", "=", 
+          RowBox[{"splitTitles", "[", 
+           RowBox[{"[", "4", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"kexdata", "=", 
+          RowBox[{"ToExpression", "[", "kexdata", "]"}]}], ";", "\n", 
+         RowBox[{"pBdata", "=", 
+          RowBox[{"splitTitles", "[", 
+           RowBox[{"[", "6", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"pBdata", "=", 
+          RowBox[{"ToExpression", "[", "pBdata", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Print", "[", "csddata", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Print", "[", "kexdata", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Print", "[", "pBdata", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"pfdata", " ", "=", " ", 
+          RowBox[{"pBdata", "*", 
+           RowBox[{"(", 
+            RowBox[{"1", "-", "pBdata"}], ")"}], "*", "csddata", "*", 
+           "csddata"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"data", "=", "\[IndentingNewLine]", 
+          RowBox[{"Flatten", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Table", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"field800", ",", 
+                  RowBox[{"nucpmg", "[", 
+                   RowBox[{"[", "j", "]"}], "]"}], ",", 
+                  RowBox[{"Ub800", "[", 
+                   RowBox[{"[", "j", "]"}], "]"}]}], "}"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"j", ",", "1", ",", 
+                  RowBox[{"Length", "[", "nucpmg", "]"}]}], "}"}]}], "]"}], 
+              ",", 
+              RowBox[{"Table", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{"field600", ",", 
+                  RowBox[{"nucpmg", "[", 
+                   RowBox[{"[", "j", "]"}], "]"}], ",", 
+                  RowBox[{"Ub600", "[", 
+                   RowBox[{"[", "j", "]"}], "]"}]}], "}"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"j", ",", "1", ",", 
+                  RowBox[{"Length", "[", "nucpmg", "]"}]}], "}"}]}], "]"}]}], 
+             "}"}], ",", "1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"errors", "=", 
+          RowBox[{"Flatten", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Table", "[", 
+               RowBox[{"errUb800", ",", 
+                RowBox[{"{", 
+                 RowBox[{"j", ",", "1", ",", 
+                  RowBox[{"Length", "[", "nucpmg", "]"}]}], "}"}]}], "]"}], 
+              ",", 
+              RowBox[{"Table", "[", 
+               RowBox[{"errUb600", ",", 
+                RowBox[{"{", 
+                 RowBox[{"j", ",", "1", ",", 
+                  RowBox[{"Length", "[", "nucpmg", "]"}]}], "}"}]}], "]"}]}], 
+             "}"}], ",", "1"}], "]"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Print", "[", 
+          RowBox[{"FileBaseName", "[", 
+           RowBox[{"fileList", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "]"}], "]"}], ";", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+          "you", " ", "can", " ", "change", " ", "the", " ", "initial", " ", 
+           "estimate", " ", "for", " ", "LM", " ", "fittings", " ", "here"}], 
+          "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"rexUb", "=", 
+          RowBox[{"NonlinearModelFit", "[", "\[IndentingNewLine]", 
+           RowBox[{"data", ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Which", "[", 
+               RowBox[{
+                RowBox[{"field", "==", "field800"}], ",", 
+                RowBox[{"modelI", "[", 
+                 RowBox[{
+                 "\[Nu]", ",", "kex", ",", "prefactor", ",", "R800", ",", 
+                  "field800"}], "]"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"field", "==", "field600"}], ",", 
+                RowBox[{"modelI", "[", 
+                 RowBox[{
+                 "\[Nu]", ",", "kex", ",", "prefactor", ",", "R600", ",", 
+                  "field600"}], "]"}]}], "]"}], ",", 
+              RowBox[{"kex", ">", "0."}], ",", 
+              RowBox[{"prefactor", ">", "0."}], ",", 
+              RowBox[{"R600", ">", "0."}], ",", 
+              RowBox[{"R800", ">", "0."}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"prefactor", ",", "6."}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"kex", ",", "25000."}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"R800", ",", 
+                RowBox[{"Ub800", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"-", "1"}], "]"}], "]"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"R600", ",", " ", 
+                RowBox[{"Ub600", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"-", "1"}], "]"}], "]"}]}], "}"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"field", ",", "\[Nu]"}], "}"}], ",", 
+            RowBox[{"Weights", "\[Rule]", 
+             RowBox[{"1", "/", "errors"}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{"MaxIterations", "\[Rule]", "10000"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+           RowBox[{"Print", "[", "data", "]"}], ";"}], "*)"}], 
+         "\[IndentingNewLine]", 
+         RowBox[{"tabUb", "=", 
+          RowBox[{"rexUb", "[", "\"\<BestFitParameters\>\"", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"kexcalcLM", " ", "=", 
+          RowBox[{"kex", "/.", " ", 
+           RowBox[{"rexUb", "[", "\"\<BestFitParameters\>\"", "]"}]}]}], ";", 
+         "\n", "  ", 
+         RowBox[{"prefractorcalcLM", "=", 
+          RowBox[{"prefactor", "/.", 
+           RowBox[{"rexUb", "[", "\"\<BestFitParameters\>\"", "]"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"AppendTo", "[", 
+          RowBox[{"preLM", ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"fileList", "[", 
+              RowBox[{"[", "i", "]"}], "]"}], ",", "kexdata", ",", "csddata", 
+             ",", "pBdata", ",", "kexcalcLM", ",", "prefractorcalcLM", ",", 
+             " ", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"kexdata", "-", "kexcalcLM"}], ")"}], "/", 
+                "kexdata"}], "*", "100"}], ")"}]}], "}"}]}], "]"}], ";", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+          "you", " ", "can", " ", "change", " ", "the", " ", "initial", " ", 
+           "estimate", " ", "for", " ", "BM", " ", "fittings", " ", "here"}], 
+          "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"rexUbII", "=", 
+          RowBox[{"NonlinearModelFit", "[", "\[IndentingNewLine]", 
+           RowBox[{"data", ",", "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Which", "[", 
+               RowBox[{
+                RowBox[{"field", "==", "field800"}], ",", 
+                RowBox[{"modelII", "[", 
+                 RowBox[{
+                 "\[Nu]", ",", "kAB", ",", "kBA", ",", "R800", ",", "csd", 
+                  ",", "field800"}], "]"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"field", "==", "field600"}], ",", 
+                RowBox[{"modelII", "[", 
+                 RowBox[{
+                 "\[Nu]", ",", "kAB", ",", "kBA", ",", "R600", ",", "csd", 
+                  ",", "field600"}], "]"}]}], "]"}], ",", 
+              RowBox[{"kAB", ">", "0."}], ",", 
+              RowBox[{"kBA", ">", "0."}], ",", 
+              RowBox[{"csd", ">", "0."}], ",", 
+              RowBox[{"R600", ">", "0."}], ",", 
+              RowBox[{"R800", ">", "0."}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"csd", ",", "0.5"}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"kAB", ",", "25000."}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"kBA", ",", "2500"}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"R800", ",", 
+                RowBox[{"Ub800", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"-", "1"}], "]"}], "]"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"R600", ",", " ", 
+                RowBox[{"Ub600", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"-", "1"}], "]"}], "]"}]}], "}"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"field", ",", "\[Nu]"}], "}"}], ",", 
+            RowBox[{"Weights", "\[Rule]", 
+             RowBox[{"1", "/", "errors"}]}], ",", "\[IndentingNewLine]", 
+            RowBox[{"MaxIterations", "\[Rule]", "100"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"tabUbII", "=", 
+          RowBox[{"rexUbII", "[", "\"\<BestFitParameters\>\"", "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Print", "[", "tabUbII", "]"}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"kABcalc", "=", 
+          RowBox[{"kAB", "/.", " ", 
+           RowBox[{"rexUbII", "[", "\"\<BestFitParameters\>\"", "]"}]}]}], 
+         ";", "\n", "   ", 
+         RowBox[{"kBAcalc", "=", 
+          RowBox[{"kBA", "/.", " ", 
+           RowBox[{"rexUbII", "[", "\"\<BestFitParameters\>\"", "]"}]}]}], 
+         ";", "\[IndentingNewLine]", 
+         RowBox[{"csdcalc", "=", 
+          RowBox[{"csd", "/.", " ", 
+           RowBox[{"rexUbII", "[", "\"\<BestFitParameters\>\"", "]"}]}]}], 
+         ";", "\[IndentingNewLine]", 
+         RowBox[{"pAcalc", " ", "=", " ", 
+          RowBox[{"kBAcalc", "/", 
+           RowBox[{"(", 
+            RowBox[{"kABcalc", "+", "kBAcalc"}], ")"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"pBcalc", " ", "=", " ", 
+          RowBox[{"kABcalc", "/", 
+           RowBox[{"(", 
+            RowBox[{"kABcalc", "+", "kBAcalc"}], ")"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"pf", " ", "=", " ", 
+          RowBox[{"4", "*", " ", 
+           RowBox[{"\[Pi]", "^", "2"}], "*", " ", "pAcalc", "*", "pBcalc", 
+           "*", "csdcalc", "*", "csdcalc"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"kexcalc", " ", "=", " ", 
+          RowBox[{"kABcalc", "+", "kBAcalc"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"Print", "[", "kexcalc", "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"AppendTo", "[", 
+          RowBox[{"preBM", ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"fileList", "[", 
+              RowBox[{"[", "i", "]"}], "]"}], ",", "kexdata", ",", "csddata", 
+             ",", "pBdata", ",", "kexcalc", ",", "pf", ",", "pAcalc", ",", 
+             "pBcalc", ",", " ", "kABcalc", ",", "kBAcalc", ",", "csdcalc", 
+             ",", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"kexdata", "-", "kexcalc"}], ")"}], "/", "kexdata"}],
+                "*", "100"}], ")"}]}], "}"}]}], "]"}], ";", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<rep_evaluating = \>\"", ",", " ", "replica", ",", 
+           "\"\<file number=\>\"", " ", ",", "i"}], "]"}], ";", "\n", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", "\n", 
+         "\[IndentingNewLine]", 
+         RowBox[{"fig", "=", 
+          RowBox[{"ListLinePlot", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Transpose", "[", 
+               RowBox[{"{", 
+                RowBox[{"nucpmg", ",", "Ub800"}], "}"}], "]"}], ",", 
+              RowBox[{"Transpose", "[", 
+               RowBox[{"{", 
+                RowBox[{"nucpmg", ",", "Ub600"}], "}"}], "]"}]}], "}"}], ",", 
+            
+            RowBox[{"PlotLegends", "->", 
+             RowBox[{"{", 
+              RowBox[{"\"\<Model 800\>\"", ",", "\"\<Model 600\>\""}], 
+              "}"}]}], ",", 
+            RowBox[{"PlotMarkers", "->", 
+             RowBox[{"{", 
+              RowBox[{"Automatic", ",", "Small"}], "}"}]}], ",", 
+            RowBox[{"FrameLabel", "->", 
+             RowBox[{"{", 
+              RowBox[{"\"\<t\>\"", ",", "\"\<R2eff\>\""}], "}"}]}], ",", 
+            RowBox[{"PlotRange", "->", "All"}], ",", 
+            RowBox[{"PlotLabel", "->", 
+             RowBox[{"StringJoin", "[", 
+              RowBox[{"\"\<kexsim = \>\"", ",", 
+               RowBox[{"ToString", "[", 
+                RowBox[{"FileBaseName", "[", 
+                 RowBox[{"fileList", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "]"}]}], "]"}]}], 
+            ",", 
+            RowBox[{"ImageSize", "->", "Medium"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", "\n", 
+         RowBox[{"indvkexUb", "=", 
+          RowBox[{"Graphics", "[", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"{", 
+                 RowBox[{
+                 "\"\<Individual \\!\\(\\*SubscriptBox[\\(k\\), \\(ex\\)]\\)= \
+\>\"", ",", 
+                  RowBox[{"NumberForm", "[", 
+                   RowBox[{"kexcalc", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"8", ",", "1"}], "}"}]}], "]"}]}], "}"}], "}"}], 
+               ",", 
+               RowBox[{"{", 
+                RowBox[{"10", ",", "Bold", ",", 
+                 RowBox[{"Darker", "[", 
+                  RowBox[{"Blue", ",", "0.4"}], "]"}]}], "}"}]}], "]"}], ",", 
+             
+             RowBox[{"Scaled", "[", 
+              RowBox[{"{", 
+               RowBox[{"0.75", ",", "0.9"}], "}"}], "]"}]}], "]"}], "]"}]}], 
+         ";", "\[IndentingNewLine]", "\n", 
+         RowBox[{"indv\[Phi]Ub", "=", 
+          RowBox[{"Graphics", "[", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"{", 
+                 RowBox[{"\"\<prefactor = \>\"", ",", 
+                  RowBox[{"NumberForm", "[", 
+                   RowBox[{"pf", ",", 
+                    RowBox[{"{", 
+                    RowBox[{"4", ",", "3"}], "}"}]}], "]"}], ",", 
+                  "\"\<\\!\\(\\*SuperscriptBox[\\(ppm\\), \\(2\\)]\\)\>\""}], 
+                 "}"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"10", ",", "Bold", ",", 
+                 RowBox[{"Darker", "[", 
+                  RowBox[{"Blue", ",", "0.4"}], "]"}]}], "}"}]}], "]"}], ",", 
+             
+             RowBox[{"Scaled", "[", 
+              RowBox[{"{", 
+               RowBox[{"0.75", ",", "0.8"}], "}"}], "]"}]}], "]"}], "]"}]}], 
+         ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{"fitLMtab", "=", 
+          RowBox[{"Graphics", "[", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"\"\<kex_LM =\>\"", ",", 
+                 RowBox[{"kex", "/.", " ", 
+                  RowBox[{
+                  "rexUb", "[", "\"\<BestFitParameters\>\"", "]"}]}]}], "}"}],
+                ",", 
+               RowBox[{"{", 
+                RowBox[{"10", ",", "Bold", ",", 
+                 RowBox[{"Darker", "[", 
+                  RowBox[{"Gray", ",", "0.4"}], "]"}]}], "}"}]}], "]"}], ",", 
+             
+             RowBox[{"Scaled", "[", 
+              RowBox[{"{", 
+               RowBox[{"0.65", ",", "0.7"}], "}"}], "]"}]}], "]"}], "]"}]}], 
+         ";", "\[IndentingNewLine]", "\n", 
+         RowBox[{"fitBMtab", "=", 
+          RowBox[{"Graphics", "[", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                "\"\<kAB_BM =\>\"", ",", "kABcalc", ",", "\"\<kBA_BM =\>\"", 
+                 ",", "kBAcalc", ",", "\"\<csd_BM =\>\"", ",", 
+                 RowBox[{"NumberForm", "[", 
+                  RowBox[{"csdcalc", ",", 
+                   RowBox[{"{", 
+                    RowBox[{"4", ",", "3"}], "}"}]}], "]"}]}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"10", ",", "Bold", ",", 
+                 RowBox[{"Darker", "[", 
+                  RowBox[{"Gray", ",", "0.4"}], "]"}]}], "}"}]}], "]"}], ",", 
+             
+             RowBox[{"Scaled", "[", 
+              RowBox[{"{", 
+               RowBox[{"0.65", ",", "0.7"}], "}"}], "]"}]}], "]"}], "]"}]}], 
+         ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"rexfit", "=", 
+          RowBox[{"Show", "[", 
+           RowBox[{
+           "fig", ",", "indvkexUb", ",", "indv\[Phi]Ub", ",", "fitLMtab", ",",
+             "fitBMtab", ",", "\[IndentingNewLine]", 
+            RowBox[{"Plot", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"rexUbII", "[", 
+                 RowBox[{"field800", ",", "\[Nu]"}], "]"}], ",", 
+                RowBox[{"rexUbII", "[", 
+                 RowBox[{"field600", ",", "\[Nu]"}], "]"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"\[Nu]", ",", "0", ",", "30000"}], "}"}], ",", 
+              RowBox[{"PlotStyle", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"RGBColor", "[", 
+                   RowBox[{"0.5", ",", "0.5", ",", "0.5"}], "]"}], "}"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"RGBColor", "[", 
+                   RowBox[{"0.5", ",", "0.5", ",", "0.5"}], "]"}], "}"}]}], 
+                "}"}]}], ",", "\[IndentingNewLine]", 
+              RowBox[{"PlotRange", "->", "All"}], ",", "\[IndentingNewLine]", 
+              
+              RowBox[{"PlotLabel", "->", "tabUbII"}]}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"Plot", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"rexUb", "[", 
+                 RowBox[{"field800", ",", "\[Nu]"}], "]"}], ",", 
+                RowBox[{"rexUb", "[", 
+                 RowBox[{"field600", ",", "\[Nu]"}], "]"}]}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"\[Nu]", ",", "0", ",", "30000"}], "}"}], ",", 
+              RowBox[{"PlotStyle", "\[Rule]", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"RGBColor", "[", 
+                   RowBox[{"0", ",", "0", ",", "1"}], "]"}], "}"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"RGBColor", "[", 
+                   RowBox[{"0", ",", "0", ",", "1"}], "]"}], "}"}]}], "}"}]}],
+               ",", 
+              RowBox[{"PlotRange", "\[Rule]", "All"}]}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"ImageSize", "->", "Medium"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"Print", "[", "rexfit", "]"}], ";", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+          "either", " ", "give", " ", "the", " ", "path", " ", "for", " ", 
+           "the", " ", "output", " ", "folder", " ", "or", " ", "add", " ", 
+           "an", " ", "out", " ", "folder", " ", "in", " ", "the", " ", 
+           "basefolder"}], "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"outFolder", "=", 
+          RowBox[{"FileNameJoin", "[", 
+           RowBox[{"{", 
+            RowBox[{"baseFolder", ",", "\"\<outt\>\"", ",", 
+             RowBox[{"FileNameTake", "[", 
+              RowBox[{"currentFolder", ",", 
+               RowBox[{"-", "1"}]}], "]"}]}], "}"}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"!", 
+            RowBox[{"DirectoryQ", "[", "outFolder", "]"}]}], ",", 
+           RowBox[{"CreateDirectory", "[", 
+            RowBox[{"outFolder", ",", 
+             RowBox[{"CreateIntermediateDirectories", "->", "True"}]}], 
+            "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"plotFile", "=", 
+          RowBox[{"FileNameJoin", "[", 
+           RowBox[{"{", 
+            RowBox[{"outFolder", ",", 
+             RowBox[{
+              RowBox[{"FileBaseName", "[", 
+               RowBox[{"fileList", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "]"}], "<>", 
+              "\"\<_fit.png\>\""}]}], "}"}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", 
+          RowBox[{"Length", "[", "fileList", "]"}]}], "}"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"(*", 
+       RowBox[{"Export", " ", "final", " ", "parameter", " ", "tables"}], 
+       "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"Export", "[", 
+       RowBox[{
+        RowBox[{"FileNameJoin", "[", 
+         RowBox[{"{", 
+          RowBox[{
+          "outFolder", ",", "\"\<LM_fit_kex_pf_pA_pB_kAB_kBA_csd.csv\>\""}], 
+          "}"}], "]"}], ",", "preLM", ",", "\"\<CSV\>\""}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Export", "[", 
+       RowBox[{
+        RowBox[{"FileNameJoin", "[", 
+         RowBox[{"{", 
+          RowBox[{
+          "outFolder", ",", "\"\<BM_fit_kex_pf_pA_pB_kAB_kBA_csd.csv\>\""}], 
+          "}"}], "]"}], ",", "preBM", ",", "\"\<CSV\>\""}], "]"}], ";"}], 
+     "\[IndentingNewLine]", ",", "\[IndentingNewLine]", "\[IndentingNewLine]",
+      "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"replica", ",", "replicaFolders"}], "}"}]}], "]"}], 
+   "\n"}]}]], "Input",
+ CellChangeTimes->{
+  3.959315738951045*^9, {3.959316127472044*^9, 3.959316132161593*^9}, {
+   3.959317940087092*^9, 3.959317958945355*^9}, 3.959317993669271*^9, {
+   3.959318052017679*^9, 3.959318072143015*^9}, {3.9593183314798717`*^9, 
+   3.959318331858176*^9}, {3.959322553514247*^9, 3.959322642332534*^9}, {
+   3.959322685019561*^9, 3.9593227174954987`*^9}, {3.959322765693301*^9, 
+   3.9593227791671677`*^9}, {3.959322836788599*^9, 3.959322871604349*^9}, {
+   3.9593231956619997`*^9, 3.9593231965899553`*^9}, {3.9593232306042633`*^9, 
+   3.959323235941378*^9}, {3.9593240295294*^9, 3.9593240394824533`*^9}, {
+   3.959324183011333*^9, 3.959324191426532*^9}, 3.9593243857881403`*^9, {
+   3.966473062282259*^9, 3.966473333485441*^9}, 3.9664734285310802`*^9, {
+   3.96647356006092*^9, 3.966473593984733*^9}, {3.966473631409446*^9, 
+   3.966473675574497*^9}},ExpressionUUID->"ecf8001b-c561-4ef7-aeb3-\
+c56427fccb9f"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{
+  3.959314971714184*^9, {3.95931526709689*^9, 3.9593152676046762`*^9}, {
+   3.9593153683104563`*^9, 3.959315389667457*^9}, {3.95931561115919*^9, 
+   3.959315616001295*^9}, 3.959315725178701*^9},
+ CellLabel->"In[76]:=",ExpressionUUID->"e8881ecc-97cb-4a82-b070-3999ce2913d9"]
+},
+WindowSize->{Full, Full},
+WindowMargins->{{4, Automatic}, {1, Automatic}},
+FrontEndVersion->"13.3 for Mac OS X ARM (64-bit) (July 24, 2023)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"8a28cc70-7400-4118-86c0-e9104623135c"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[400, 13, 6507, 176, 813, "Input",ExpressionUUID->"bd61ac34-e2ac-4c3d-b2e5-5eaaa443066b"],
+Cell[6910, 191, 26687, 603, 2677, "Input",ExpressionUUID->"ecf8001b-c561-4ef7-aeb3-c56427fccb9f"],
+Cell[33600, 796, 320, 5, 30, "Input",ExpressionUUID->"e8881ecc-97cb-4a82-b070-3999ce2913d9"]
+}
+]
+*)
+
