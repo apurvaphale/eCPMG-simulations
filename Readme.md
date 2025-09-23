@@ -1,5 +1,5 @@
 # Analyzing sub-millisecond timescale protein dynamics using eCPMG experiments
-
+(https://doi.org/10.1007/s10858-025-00475-w) 
 ## Pre-requisites
 * Any OS running Mathematica
 
